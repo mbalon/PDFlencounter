@@ -17,4 +17,5 @@ def convert_size_to_mm(pt_size: List):
 
 
 page_size = get_page_size(path_name)
+print(get_page_size(path_name))
 print(convert_size_to_mm(page_size))
