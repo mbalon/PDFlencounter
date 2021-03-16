@@ -8,14 +8,17 @@ from reportlab.lib.units import cm
 from main import *
 
 
+def create_test_file(name: str, width: float, height: float):
+    canvas = Canvas(name, pagesize=(round(width * cm, 4), round(height * cm, 4)))
+    canvas.drawString(72, 72, "Hello World")
+    canvas.save()
+    return canvas
+
+
 @pytest.fixture(autouse=True)
 def run_around_tests():
-    canvas_a4 = Canvas("A4.pdf", pagesize=(21 * cm, 29.7 * cm))
-    canvas_a4.drawString(72, 72, "Hello, World")
-    canvas_a5 = Canvas("A5.pdf", pagesize=(14.8 * cm, 21 * cm))
-    canvas_a5.drawString(72, 72, "Hello, World")
-    canvas_a4.save()
-    canvas_a5.save()
+    canvas_a4 = create_test_file("A4.pdf", 21, 29.7)
+    canvas_a5 = create_test_file("A5.pdf", 14.8, 21)
     yield
     try:
         os.remove("A4.pdf")
