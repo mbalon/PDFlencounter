@@ -1,6 +1,7 @@
 import pytest
 import os
 import pathlib
+import math
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.units import cm
 
@@ -28,7 +29,8 @@ def test_get_page_size_for_a4():
 
     output = get_page_size(path)
 
-    assert output == [595.2756, 841.8898]
+    assert math.isclose(output[0], 595.2756, rel_tol=0.0001, abs_tol=0.0)
+    assert math.isclose(output[1], 841.8898, rel_tol=0.0001, abs_tol=0.0)
 
 
 def test_get_page_size_for_a5():
@@ -36,7 +38,8 @@ def test_get_page_size_for_a5():
 
     output = get_page_size(path)
 
-    assert output == [419.5276, 595.2756]
+    assert math.isclose(output[0], 419.5276, rel_tol=0.0001, abs_tol=0.0)
+    assert math.isclose(output[1], 595.2756, rel_tol=0.0001, abs_tol=0.0)
 
 
 
