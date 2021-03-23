@@ -64,3 +64,25 @@ def test_get_page_size_fail_a4():
 
     assert math.isclose(output[0], 555 * cm, rel_tol=0.0001, abs_tol=0.0)
     assert math.isclose(output[1], 777 * cm, rel_tol=0.0001, abs_tol=0.0)
+
+
+def test_convert_size_to_mm_a4():
+    size_list = [21 * cm, 29.7 * cm]
+    size_list_mm = convert_size_to_mm(size_list)
+
+    assert size_list_mm == [210, 297]
+
+
+def test_convert_size_to_mm_a5():
+    size_list = [14.8 * cm, 21 * cm]
+    size_list_mm = convert_size_to_mm(size_list)
+
+    assert size_list_mm == [148, 210]
+
+
+@pytest.mark.xfail
+def test_convert_size_to_mm_a5_fail():
+    size_list = [14.8 * cm, 21 * cm]
+    size_list_mm = convert_size_to_mm(size_list)
+
+    assert size_list_mm == [568, 454]
