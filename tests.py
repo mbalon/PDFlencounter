@@ -25,14 +25,19 @@ def run_around_tests():
         os.remove("A4.pdf")
         os.remove("A5.pdf")
         os.remove("297.pdf")
+        size_dict_box = {"A4": 0, "A3": 0, "A2": 0, "A1": 0, "A0": 0,
+                         "B2": 0, "B1": 0, "B0": 0, "297": 0, "420": 0,
+                         "610": 0, "707": 0, "841": 0, "914": 0, "1070": 0}
     except FileNotFoundError:
         pass
 
 
 def test_get_page_size_for_a4():
     path = str(pathlib.Path().absolute()) + r"\A4.pdf"
-
-    output = get_page_size(path)
+    with open(path, 'rb') as file:
+        pdf = PdfFileReader(file)
+        num_page = pdf.getNumPages() - 1
+        output = get_page_size(pdf, num_page)
 
     assert math.isclose(output[0], 21 * cm, rel_tol=0.0001, abs_tol=0.0)
     assert math.isclose(output[1], 29.7 * cm, rel_tol=0.0001, abs_tol=0.0)
@@ -41,7 +46,10 @@ def test_get_page_size_for_a4():
 def test_get_page_size_for_a5():
     path = str(pathlib.Path().absolute()) + r"\A5.pdf"
 
-    output = get_page_size(path)
+    with open(path, 'rb') as file:
+        pdf = PdfFileReader(file)
+        num_page = pdf.getNumPages() - 1
+        output = get_page_size(pdf, num_page)
 
     assert math.isclose(output[0], 14.8 * cm, rel_tol=0.0001, abs_tol=0.0)
     assert math.isclose(output[1], 21 * cm, rel_tol=0.0001, abs_tol=0.0)
@@ -50,7 +58,10 @@ def test_get_page_size_for_a5():
 def test_get_page_size_for_297_2000():
     path = str(pathlib.Path().absolute()) + r"\297.pdf"
 
-    output = get_page_size(path)
+    with open(path, 'rb') as file:
+        pdf = PdfFileReader(file)
+        num_page = pdf.getNumPages() - 1
+        output = get_page_size(pdf, num_page)
 
     assert math.isclose(output[0], 29.7 * cm, rel_tol=0.0001, abs_tol=0.0)
     assert math.isclose(output[1], 200 * cm, rel_tol=0.0001, abs_tol=0.0)
@@ -60,7 +71,10 @@ def test_get_page_size_for_297_2000():
 def test_get_page_size_fail_a4():
     path = str(pathlib.Path().absolute()) + r"\A4.pdf"
 
-    output = get_page_size(path)
+    with open(path, 'rb') as file:
+        pdf = PdfFileReader(file)
+        num_page = pdf.getNumPages() - 1
+        output = get_page_size(pdf, num_page)
 
     assert math.isclose(output[0], 555 * cm, rel_tol=0.0001, abs_tol=0.0)
     assert math.isclose(output[1], 777 * cm, rel_tol=0.0001, abs_tol=0.0)
@@ -127,9 +141,38 @@ def test_change_size_list_to_main_key_a1():
 
     assert output == "A1"
 
+
 def test_change_size_list_to_main_key_610():
     size_list = [850, 606]
 
     output = change_size_list_to_main_key(size_list)
 
     assert output == "610"
+
+
+def test_assign_to_size_a4():
+    size_key = "A4"
+    mm_size = [210, 297]
+
+    assign_to_size(size_key, mm_size)
+
+    assert size_dict_box["A4"] == 1
+
+
+def test_assign_to_size_297():
+    size_key = "297"
+    mm_size = [750, 297]
+
+    assign_to_size(size_key, mm_size)
+
+    assert size_dict_box["297"] == 750
+
+
+def test_count_len_in_file_a4():
+    path = str(pathlib.Path().absolute()) + r"\A4.pdf"
+
+    count_len_in_file(path)
+
+    assert size_dict_box["A4"] == 2
+
+

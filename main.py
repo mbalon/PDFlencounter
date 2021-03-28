@@ -7,11 +7,9 @@ size_dict_box = {"A4": 0, "A3": 0, "A2": 0, "A1": 0, "A0": 0,
                  "610": 0, "707": 0, "841": 0, "914": 0, "1070": 0}
 
 
-def get_page_size(path):
-    with open(path, 'rb') as file:
-        pdf = PdfFileReader(file)
-        page = pdf.getPage(0)
-        return page["/MediaBox"][2:4]
+def get_page_size(pdf_object, num_page):
+    page = pdf_object.getPage(num_page)
+    return page["/MediaBox"][2:4]
 
 
 def convert_size_to_mm(pt_size: List):
@@ -76,6 +74,22 @@ def assign_to_size(size_key: str, mm_size: List):
             size_dict_box[size_key] += 1
         else:
             size_dict_box[size_key] += max(mm_size)
+
+
+def count_len_in_file(path: str):
+    with open(path, 'rb') as file:
+        pdf = PdfFileReader(file)
+        num_of_pages = pdf.getNumPages() - 1
+        num_page = 0
+        while num_page <= num_of_pages:
+            page_size_pt = get_page_size(pdf, num_page)
+            page_size_mm = convert_size_to_mm(page_size_pt)
+            size_key = change_size_list_to_main_key(page_size_mm)
+            assign_to_size(size_key, page_size_mm)
+            num_page += 1
+
+
+
 
 
 
