@@ -86,3 +86,50 @@ def test_convert_size_to_mm_a5_fail():
     size_list_mm = convert_size_to_mm(size_list)
 
     assert size_list_mm == [568, 454]
+
+
+def test_change_size_list_to_main_key_a4():
+    size_list = [210, 297]
+
+    output = change_size_list_to_main_key(size_list)
+
+    assert output == "A4"
+
+
+def test_change_size_list_to_main_key_a3():
+    size_list = [297, 420]
+
+    output = change_size_list_to_main_key(size_list)
+
+    assert output == "A3"
+
+
+def test_change_size_list_to_main_key_b2():
+    size_list = [500, 707]
+
+    output = change_size_list_to_main_key(size_list)
+
+    assert output == "B2"
+
+
+def test_change_size_list_to_main_key_297():
+    size_list = [297, 707]
+
+    output = change_size_list_to_main_key(size_list)
+
+    assert output == "297"
+
+
+def test_change_size_list_to_main_key_a1():
+    size_list = [841, 594]
+
+    output = change_size_list_to_main_key(size_list)
+
+    assert output == "A1"
+
+def test_change_size_list_to_main_key_610():
+    size_list = [850, 606]
+
+    output = change_size_list_to_main_key(size_list)
+
+    assert output == "610"

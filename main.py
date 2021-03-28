@@ -1,7 +1,6 @@
 from PyPDF2 import PdfFileReader
 from reportlab.lib.units import mm
 from typing import List
-import math
 
 size_dict_box = {"A4": 0, "A3": 0, "A2": 0, "A1": 0, "A0": 0,
                  "B2": 0, "B1": 0, "B0": 0, "297": 0, "420": 0,
