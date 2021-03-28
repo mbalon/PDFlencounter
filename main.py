@@ -1,6 +1,7 @@
 from PyPDF2 import PdfFileReader
 from reportlab.lib.units import mm
 from typing import List
+import os
 
 size_dict_box = {"A4": 0, "A3": 0, "A2": 0, "A1": 0, "A0": 0,
                  "B2": 0, "B1": 0, "B0": 0, "297": 0, "420": 0,
@@ -13,22 +14,22 @@ def get_page_size(pdf_object, num_page):
 
 
 def convert_size_to_mm(pt_size: List):
-    return [round(float(size)/mm, 2) for size in pt_size]
+    return [round(float(size) / mm, 2) for size in pt_size]
 
 
 def change_size_list_to_main_key(mm_size: List):
     small_size = min(mm_size)
     big_size = max(mm_size)
-    if 206 < small_size < 214:
-        if 293 < big_size < 301:
+    if small_size < 214:
+        if big_size < 301:
             return "A4"
     if small_size < 301:
-        if 416 < big_size < 424 and 291 < small_size:
+        if big_size < 424:
             return "A3"
         else:
             return "297"
     if small_size < 424:
-        if 590 < big_size < 600 and 414 < small_size:
+        if big_size < 600:
             return "A2"
         else:
             return "420"
@@ -89,10 +90,14 @@ def count_len_in_file(path: str):
             num_page += 1
 
 
+def count_in_dir(path: str):
+    os.chdir(path)
+    paths_list = []
+    for root, dirs, files in os.walk("."):
+        for file_name in files:
+            path_to_file = os.path.join(root, file_name)
+            paths_list.append(path_to_file)
 
-
-
-
-
-
+    for file_path in paths_list:
+        count_len_in_file(file_path)
 
