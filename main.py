@@ -1,7 +1,9 @@
 from PyPDF2 import PdfFileReader
 from reportlab.lib.units import mm
 from typing import List
+import math
 import os
+
 
 size_dict_box = {"A4": 0, "A3": 0, "A2": 0, "A1": 0, "A0": 0,
                  "B2": 0, "B1": 0, "B0": 0, "297": 0, "420": 0,
@@ -10,7 +12,12 @@ size_dict_box = {"A4": 0, "A3": 0, "A2": 0, "A1": 0, "A0": 0,
 
 def get_page_size(pdf_object, num_page):
     page = pdf_object.getPage(num_page)
-    return page["/MediaBox"][2:4]
+    size_list = page["/MediaBox"]
+    short_list = []
+    for size in size_list:
+        if not math.isclose(size, 0, rel_tol=0.0001, abs_tol=0.0):
+            short_list.append(abs(size))
+    return short_list
 
 
 def convert_size_to_mm(pt_size: List):
@@ -23,44 +30,44 @@ def change_size_list_to_main_key(mm_size: List):
     if small_size < 214:
         if big_size < 301:
             return "A4"
-    if small_size < 301:
+    elif small_size < 301:
         if big_size < 424:
             return "A3"
         else:
             return "297"
-    if small_size < 424:
+    elif small_size < 424:
         if big_size < 600:
             return "A2"
         else:
             return "420"
-    if small_size < 505:
+    elif small_size < 505:
         if 703 < big_size < 712 and 494 < small_size:
             return "B2"
-    if small_size < 600:
+    elif small_size < 600:
         if 836 < big_size < 845 and 589 < small_size:
             return "A1"
         else:
             return "610"
-    if 605 < small_size < 614:
+    elif 605 < small_size < 614:
         return "610"
-    if small_size < 712:
+    elif small_size < 712:
         if 997 < big_size < 1004 and 701 < small_size:
             return "B1"
         else:
             return "707"
-    if small_size < 845:
+    elif small_size < 845:
         if 1185 < big_size < 1194 and 835 < small_size:
             return "A0"
         else:
             return "841"
-    if small_size < 918:
+    elif small_size < 918:
         return "914"
-    if small_size < 1005:
+    elif small_size < 1005:
         if 1408 < big_size < 1420 and 994 < small_size:
             return "B0"
         else:
             return "1070"
-    if small_size < 1075:
+    elif small_size < 1075:
         return "1070"
     else:
         return "key not found"
@@ -69,12 +76,15 @@ def change_size_list_to_main_key(mm_size: List):
 def assign_to_size(size_key: str, mm_size: List):
     dict_keys = size_dict_box.keys()
     if size_key == "key not found":
+        print("Key not found")
         return
     if size_key in dict_keys:
         if size_key in ["A4", "A3", "A2", "A1", "A0", "B2", "B1", "B0"]:
             size_dict_box[size_key] += 1
         else:
-            size_dict_box[size_key] += max(mm_size)
+            size_dict_box[size_key] += max(mm_size)/1000
+    print(size_key)
+    return
 
 
 def count_len_in_file(path: str):
@@ -88,6 +98,7 @@ def count_len_in_file(path: str):
             size_key = change_size_list_to_main_key(page_size_mm)
             assign_to_size(size_key, page_size_mm)
             num_page += 1
+            print(num_page)
 
 
 def count_in_dir(path: str):
@@ -100,4 +111,6 @@ def count_in_dir(path: str):
 
     for file_path in paths_list:
         count_len_in_file(file_path)
+
+
 
