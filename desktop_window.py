@@ -5,10 +5,10 @@ from main import count_in_dir, size_dict_box
 
 root = Tk()
 
-
 def askDir():
     dirname = filedialog.askdirectory()
     entry_box.insert(END, dirname)
+
 
 
 def compute():
@@ -56,7 +56,7 @@ def clear():
 
 
 label_info_box = Label(root, text="Wskaż ścieżkę do folderu")
-entry_box = Entry(root, width=50, borderwidth=5)
+entry_box = Entry(root, width=50, borderwidth=5, relief='flat')
 search_button = Button(text="...", command=askDir)
 frame = Frame(root, bd=5, height=60, width=60)
 compute_button = Button(text="Przelicz", padx=20, command=compute)
