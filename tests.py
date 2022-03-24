@@ -1,5 +1,6 @@
 import pytest
 import pathlib
+import cv2
 import math
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.units import cm
@@ -185,7 +186,13 @@ def test_get_page_size_pdf_file_page_90():
     assert math.isclose(max(output), 3028.3 * mm, rel_tol=0.0001, abs_tol=0.0)
 
 
+def test_convert_page_to_image_for_a4():
+    path = str(pathlib.Path().absolute()) + r"\A4.pdf"
+    with open(path, 'rb') as file:
+        output = convert_file_to_image(path)
 
+    assert math.isclose(output[0], 21 * cm, rel_tol=0.0001, abs_tol=0.0)
+    assert math.isclose(output[1], 29.7 * cm, rel_tol=0.0001, abs_tol=0.0)
 
 
 

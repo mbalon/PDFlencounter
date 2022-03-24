@@ -1,13 +1,18 @@
-from PyPDF2 import PdfFileReader
-from reportlab.lib.units import mm
-from typing import List
 import math
 import os
+import tempfile
+from typing import List
 
+import cv2
+from PyPDF2 import PdfFileReader
+from pdf2image import convert_from_path
+from reportlab.lib.units import mm, inch
 
 size_dict_box = {"A4": 0, "A3": 0, "A2": 0, "A1": 0, "A0": 0,
                  "B2": 0, "B1": 0, "B0": 0, "297": 0, "420": 0,
                  "610": 0, "707": 0, "841": 0, "914": 0, "1070": 0}
+
+DPI = 200
 
 
 def get_page_size(pdf_object, num_page):
@@ -82,9 +87,28 @@ def assign_to_size(size_key: str, mm_size: List):
         if size_key in ["A4", "A3", "A2", "A1", "A0", "B2", "B1", "B0"]:
             size_dict_box[size_key] += 1
         else:
-            size_dict_box[size_key] += max(mm_size)/1000
-    print(size_key)
+            mm_size.remove(min(mm_size))
+            size_dict_box[size_key] += int(mm_size[0])/1000
     return
+
+
+def get_shape_of_image(path):
+    image = cv2.imread(path)
+    h, w = image.shape[:2]
+    return [h, w]
+
+
+def convert_px_to_mm(pixels: int, dpi: int):
+    return round((pixels * inch/mm) / dpi, 2)
+
+
+def convert_file_to_image(path):
+    with tempfile.TemporaryDirectory() as tem_path:
+        images_from_path = convert_from_path(path, output_folder=tem_path, fmt='jpg', paths_only=True)
+        for im in images_from_path:
+            size_mm = [convert_px_to_mm(i, DPI) for i in get_shape_of_image(im)]
+            size_key = change_size_list_to_main_key(size_mm)
+            assign_to_size(size_key, size_mm)
 
 
 def count_len_in_file(path: str):
@@ -98,10 +122,9 @@ def count_len_in_file(path: str):
             size_key = change_size_list_to_main_key(page_size_mm)
             assign_to_size(size_key, page_size_mm)
             num_page += 1
-            print(num_page)
 
 
-def count_in_dir(path: str):
+def count_in_dir(path: str, func):
     os.chdir(path)
     paths_list = []
     for root, dirs, files in os.walk("."):
@@ -110,7 +133,10 @@ def count_in_dir(path: str):
             paths_list.append(path_to_file)
 
     for file_path in paths_list:
-        count_len_in_file(file_path)
+        func(file_path)
+
+
+
 
 
 

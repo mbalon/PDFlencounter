@@ -1,19 +1,16 @@
 from tkinter import *
 from tkinter import filedialog
-from main import count_in_dir, size_dict_box
+from main import count_in_dir, size_dict_box, convert_file_to_image, count_len_in_file
 
 
 root = Tk()
+
 
 def askDir():
     dirname = filedialog.askdirectory()
     entry_box.insert(END, dirname)
 
-
-
-def compute():
-    path = entry_box.get()
-    count_in_dir(path)
+def set_value():
     A4.set(size_dict_box["A4"])
     A3.set(size_dict_box["A3"])
     A2.set(size_dict_box["A2"])
@@ -30,36 +27,38 @@ def compute():
     roll_841.set(size_dict_box["841"])
     roll_914.set(size_dict_box["914"])
     roll_1070.set(size_dict_box["1070"])
+
+def compute_simple():
+    path = entry_box.get()
+    count_in_dir(path, count_len_in_file)
+    set_value()
+
+def compute_with_flatten():
+    path = entry_box.get()
+    count_in_dir(path, convert_file_to_image)
+    set_value()
 
 
 def clear():
     for key in size_dict_box.keys():
         size_dict_box[key] = 0
 
-    A4.set(size_dict_box["A4"])
-    A3.set(size_dict_box["A3"])
-    A2.set(size_dict_box["A2"])
-    A1.set(size_dict_box["A1"])
-    A0.set(size_dict_box["A0"])
-    B2.set(size_dict_box["B2"])
-    B1.set(size_dict_box["B1"])
-    B0.set(size_dict_box["B0"])
-
-    roll_297.set(size_dict_box["297"])
-    roll_420.set(size_dict_box["420"])
-    roll_610.set(size_dict_box["610"])
-    roll_710.set(size_dict_box["707"])
-    roll_841.set(size_dict_box["841"])
-    roll_914.set(size_dict_box["914"])
-    roll_1070.set(size_dict_box["1070"])
+    set_value()
     entry_box.delete(0, 'end')
 
 
+flat_on = IntVar()
+flatten_check_box = Checkbutton(root, text='Spłaszcz', variable=flat_on)
 label_info_box = Label(root, text="Wskaż ścieżkę do folderu")
 entry_box = Entry(root, width=50, borderwidth=5, relief='flat')
 search_button = Button(text="...", command=askDir)
 frame = Frame(root, bd=5, height=60, width=60)
-compute_button = Button(text="Przelicz", padx=20, command=compute)
+
+if flat_on.get():
+    compute_button = Button(text="Przelicz", padx=20, command=compute_with_flatten)
+else:
+    compute_button = Button(text="Przelicz", padx=20, command=compute_simple)
+
 clear_button = Button(text="Wyczyść tabelę", command=clear)
 
 label_format = Label(root, text="Formaty ISO [szt.]")
@@ -135,6 +134,7 @@ search_button.grid(row=1, column=4, columnspan=1)
 frame.grid(row=2, column=0, rowspan=9, columnspan=2)
 compute_button.grid(row=1, column=5)
 clear_button.grid(row=2, column=5)
+flatten_check_box.grid(row=3, column=5)
 
 label_format.grid(row=2, column=0, columnspan=2)
 label_A4.grid(row=3, column=0, columnspan=1)
