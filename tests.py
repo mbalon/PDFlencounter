@@ -1,5 +1,4 @@
 import pytest
-import os
 import pathlib
 import math
 from reportlab.pdfgen.canvas import Canvas
@@ -174,6 +173,19 @@ def test_count_len_in_file_a4():
     count_len_in_file(path)
 
     assert size_dict_box["A4"] == 2
+
+
+def test_get_page_size_pdf_file_page_90():
+    path = r"D:\PDFlencouter_test_folder\wetransfer-a90efb\Operat_Kolaudacyjny_odcinek_nr_12.pdf"
+    with open(path, 'rb') as file:
+        pdf = PdfFileReader(file)
+        output = get_page_size(pdf, 90)
+
+    assert math.isclose(min(output), 296 * mm, rel_tol=0.0001, abs_tol=0.0)
+    assert math.isclose(max(output), 3028.3 * mm, rel_tol=0.0001, abs_tol=0.0)
+
+
+
 
 
 

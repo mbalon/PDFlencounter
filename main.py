@@ -103,7 +103,6 @@ def convert_px_to_mm(pixels: int, dpi: int):
 
 
 def convert_file_to_image(path):
-    print("Spłaszczanie")
     with tempfile.TemporaryDirectory() as tem_path:
         images_from_path = convert_from_path(path, output_folder=tem_path, fmt='jpg', paths_only=True)
         for im in images_from_path:
