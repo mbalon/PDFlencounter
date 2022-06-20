@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from main import count_in_dir, size_dict_box, convert_file_to_image, count_len_in_file
 
 
@@ -28,15 +28,21 @@ def set_value():
     roll_914.set(size_dict_box["914"])
     roll_1070.set(size_dict_box["1070"])
 
+
 def compute_simple():
-    path = entry_box.get()
-    count_in_dir(path, count_len_in_file)
-    set_value()
+    try:
+        path = entry_box.get()
+        count_in_dir(path, count_len_in_file)
+        set_value()
+    except ValueError:
+        messagebox.showwarning("Błąd", "Wymagane jest spłaszczenie")
+
 
 def compute_with_flatten():
-    path = entry_box.get()
-    count_in_dir(path, convert_file_to_image)
-    set_value()
+        path = entry_box.get()
+        count_in_dir(path, convert_file_to_image)
+        set_value()
+
 
 def checkbox_selection():
     if flat_on.get() == 1:
