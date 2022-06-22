@@ -10,6 +10,7 @@ def askDir():
     dirname = filedialog.askdirectory()
     entry_box.insert(END, dirname)
 
+
 def set_value():
     A4.set(size_dict_box["A4"])
     A3.set(size_dict_box["A3"])
@@ -44,13 +45,6 @@ def compute_with_flatten():
         set_value()
 
 
-def checkbox_selection():
-    if flat_on.get() == 1:
-        compute_with_flatten()
-    else:
-        compute_simple()
-
-
 def clear():
     for key in size_dict_box.keys():
         size_dict_box[key] = 0
@@ -59,17 +53,14 @@ def clear():
     entry_box.delete(0, 'end')
 
 
-flat_on = IntVar()
-flatten_check_box = Checkbutton(root, text='Spłaszcz', variable=flat_on, onvalue=1, offvalue=0, command=checkbox_selection)
 label_info_box = Label(root, text="Wskaż ścieżkę do folderu")
 entry_box = Entry(root, width=50, borderwidth=5, relief='flat')
 search_button = Button(text="...", command=askDir)
 frame = Frame(root, bd=5, height=60, width=60)
 
-if flat_on.get() == 1:
-    compute_button = Button(text="Przelicz", padx=20, command=compute_with_flatten)
-else:
-    compute_button = Button(text="Przelicz", padx=20, command=compute_simple)
+
+compute_button = Button(text="Przelicz", padx=20, command=compute_simple)
+flatten_button = Button(text="Spłaszcz", padx=20, command=compute_with_flatten)
 
 clear_button = Button(text="Wyczyść tabelę", command=clear)
 
@@ -146,7 +137,7 @@ search_button.grid(row=1, column=4, columnspan=1)
 frame.grid(row=2, column=0, rowspan=9, columnspan=2)
 compute_button.grid(row=1, column=5)
 clear_button.grid(row=2, column=5)
-flatten_check_box.grid(row=3, column=5)
+flatten_button.grid(row=3, column=5)
 
 label_format.grid(row=2, column=0, columnspan=2)
 label_A4.grid(row=3, column=0, columnspan=1)
