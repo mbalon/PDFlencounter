@@ -1,8 +1,8 @@
 import pytest
 import pathlib
-import math
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.units import cm
+import cv2
 
 from main import *
 
@@ -165,6 +165,14 @@ def test_assign_to_size_297():
     assign_to_size(size_key, mm_size)
 
     assert size_dict_box["297"] == 750
+
+def test_assign_to_size_440():
+    size_key = "297"
+    mm_size = [440, 570]
+
+    assign_to_size(size_key, mm_size)
+
+    assert size_dict_box["610"] == 570
 
 
 def test_count_len_in_file_a4():

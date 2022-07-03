@@ -48,6 +48,8 @@ def change_size_list_to_main_key(mm_size: List):
     elif small_size < 505:
         if 703 < big_size < 712 and 494 < small_size:
             return "B2"
+        else:
+            return "610"
     elif small_size < 600:
         if 836 < big_size < 845 and 589 < small_size:
             return "A1"
@@ -134,7 +136,6 @@ def count_in_dir(path: str, func):
 
     for file_path in paths_list:
         func(file_path)
-
 
 
 

@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import filedialog, messagebox
+from tkinter import filedialog
 from main import count_in_dir, size_dict_box, convert_file_to_image, count_len_in_file
 
 
@@ -31,18 +31,15 @@ def set_value():
 
 
 def compute_simple():
-    try:
-        path = entry_box.get()
-        count_in_dir(path, count_len_in_file)
-        set_value()
-    except ValueError:
-        messagebox.showwarning("Błąd", "Wymagane jest spłaszczenie")
+    path = entry_box.get()
+    count_in_dir(path, count_len_in_file)
+    set_value()
 
 
 def compute_with_flatten():
-        path = entry_box.get()
-        count_in_dir(path, convert_file_to_image)
-        set_value()
+    path = entry_box.get()
+    count_in_dir(path, convert_file_to_image)
+    set_value()
 
 
 def clear():
